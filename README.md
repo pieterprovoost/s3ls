@@ -10,3 +10,23 @@ Searchable S3 bucket file listing.
   - <https://pieterprovoost.github.io/s3ls/static/js/main.js>
   - <https://pieterprovoost.github.io/s3ls/static/css/main.css>
 - Upload `index.html` to S3
+- Configure `s3:GetObject` and `s3:ListBucket` permissions
+- Configure CORS, for example:
+
+```
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET"
+        ],
+        "AllowedOrigins": [
+            "*"
+        ],
+        "ExposeHeaders": [],
+        "MaxAgeSeconds": 3000
+    }
+]
+```

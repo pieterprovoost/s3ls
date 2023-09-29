@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Navbar, Container, Row, Col, Button, Form } from "react-bootstrap";
+import { Navbar, Container, Row, Col, Button, Form, Table } from "react-bootstrap";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import "bootstrap/dist/css/bootstrap.min.css";
+import prettyBytes from "pretty-bytes";
+import moment from "moment";
 
 const BUCKET_NAME = window.BUCKET_NAME;
 const PAGE_SIZE = window.PAGE_SIZE || 20;
@@ -117,18 +119,24 @@ function App() {
         </Row>
         <Row>
           <Col>
-            <ul>
-              {files.filter(file => file.Key !== prefix.join("/") + "/").map((file) => {
-                if (file.Key) {
-                  return <li key={file.Key}><a rel="noreferrer" href={"https://" + BUCKET_NAME + ".s3.amazonaws.com/" + file.Key} target="_blank">{file.Key}</a></li>
-                } else if (file.Prefix) {
-                  return <li key={file.Prefix}><a href="#" onClick={() => handlePrefix(file.Prefix)}>{file.Prefix}</a></li>
-                }
-              })}
-            </ul>
+            <Table size="sm">
+              <tbody>
+                {files.filter(file => file.Key !== prefix.join("/") + "/").map((file) => {
+                  if (file.Key) {
+                    return <tr key={file.Key}>
+                      <td><a rel="noreferrer" href={"https://" + BUCKET_NAME + ".s3.amazonaws.com/" + file.Key} target="_blank">{file.Key}</a></td>
+                      <td>{prettyBytes(file.Size)}</td>
+                      <td>{moment(file.LastModified).format("YYYY-MM-DD HH:mm")}</td>
+                    </tr>
+                  } else if (file.Prefix) {
+                    return <tr key={file.Prefix}><td colspan="3"><a href="#" onClick={() => handlePrefix(file.Prefix)}>{file.Prefix}</a></td></tr>
+                  }
+                })}
+              </tbody>
+            </Table>
           </Col>
         </Row>
-        <Row>
+        <Row className="mt-2">
           <Col>
             <Button disabled={continuationTokens.length < 2} onClick={handlePrevious}>Previous</Button>
             <Button disabled={!truncated} className="ms-2" onClick={handleNext}>Next</Button>
