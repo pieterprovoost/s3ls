@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navbar, Container, Row, Col, Button } from "react-bootstrap";
+import { Navbar, Container, Row, Col, Button, Form } from "react-bootstrap";
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -14,12 +14,15 @@ function App() {
   const [truncated, setTruncated] = useState(true);
   const [prefix, setPrefix] = useState([]);
   const [continuationTokens, setContinuationTokens] = useState([]);
+  const [search, setSearch] = useState("");
 
-  function updateFiles(tokens = [], pref = []) {
+  function updateFiles(tokens = [], pref = [], query = "") {
     const s3Client = new S3Client({
       region: REGION,
       signer: { sign: async (request) => request }
     });
+
+    const joinedPrefix = (pref.length ? pref.join("/") + "/" : "") + query;
 
     const fetchFiles = async () => {
       try {
@@ -27,7 +30,7 @@ function App() {
           Bucket: BUCKET_NAME,
           MaxKeys: PAGE_SIZE,
           Delimiter: "/",
-          Prefix: pref.length ? pref.join("/") + "/" : ""
+          Prefix: joinedPrefix
         };
         if (tokens.length > 0) {
           payload.ContinuationToken = tokens.slice(-1);
@@ -75,10 +78,17 @@ function App() {
     } else {
       splitPrefix = newPrefix.replace(/\/$/, "").split("/");
     }
+    setSearch("");
     setPrefix(splitPrefix);
     setContinuationTokens([]);
-    updateFiles([], splitPrefix);
+    updateFiles([], splitPrefix, "");
   }
+
+  function handleSearch(event) {
+    const query = event.target.value;
+    setSearch(query);
+    updateFiles([], prefix, query);
+  };
 
   return (
     <div className="App">
@@ -90,6 +100,13 @@ function App() {
         </Container>
       </Navbar>
       <Container className="mt-3 mb-3">
+        <Row>
+          <Col>
+            <Form.Group className="mb-3 col-3">
+              <Form.Control type="text" placeholder="Search in path" value={search} onChange={handleSearch} />
+            </Form.Group>
+          </Col>
+        </Row>
         <Row>
           <Col>
             <p>
