@@ -1,0 +1,9 @@
+{
+  "short_name": "S3 file listing",
+  "name": "S3 file listing",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
