@@ -96,7 +96,7 @@ function App() {
     <div className="App">
       <Navbar bg="light" expand="lg">
         <Container>
-          <Navbar.Brand href="/">
+          <Navbar.Brand href="/index.html">
             S3 file listing: {BUCKET_NAME}
           </Navbar.Brand>
         </Container>
