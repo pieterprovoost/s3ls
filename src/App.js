@@ -124,12 +124,12 @@ function App() {
                 {files.filter(file => file.Key !== prefix.join("/") + "/").map((file) => {
                   if (file.Key) {
                     return <tr key={file.Key}>
-                      <td><a rel="noreferrer" href={"https://" + BUCKET_NAME + ".s3.amazonaws.com/" + file.Key} target="_blank">{file.Key}</a></td>
+                      <td><a rel="noreferrer" href={"https://" + BUCKET_NAME + ".s3.amazonaws.com/" + file.Key} target="_blank">{file.Key.split("/").slice(-1)}</a></td>
                       <td>{prettyBytes(file.Size)}</td>
                       <td>{moment(file.LastModified).format("YYYY-MM-DD HH:mm")}</td>
                     </tr>
                   } else if (file.Prefix) {
-                    return <tr key={file.Prefix}><td colspan="3"><a href="#" onClick={() => handlePrefix(file.Prefix)}>{file.Prefix}</a></td></tr>
+                    return <tr key={file.Prefix}><td colSpan="3"><a href="#" onClick={() => handlePrefix(file.Prefix)}>{file.Prefix.split("/").slice(-2)}</a></td></tr>
                   }
                 })}
               </tbody>
