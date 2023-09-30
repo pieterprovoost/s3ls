@@ -144,6 +144,15 @@ function App() {
           </Col>
         </Row>
       </Container>
+      {/* <footer className="footer mt-auto pt-4 pb-4 bg-light">
+        <Container>
+        <Row>
+          <Col lg={true}>
+            <span className="text-muted">https://github.com/pieterprovoost/s3ls</span>
+          </Col>
+        </Row>
+        </Container>
+      </footer> */}
     </div>
   );
 }
